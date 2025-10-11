@@ -33,36 +33,36 @@
 
 #include <stdint.h>
 
-#ifndef __LOGGER_PREFIX__
-#define __LOGGER_PREFIX__ _
+#ifndef MLOGGER_PREFIX
+#define MLOGGER_PREFIX _
 #endif
 #define __SYMBOL_CONCAT__(a, b) a##b
-#define ____LOGGER_FUNC__(prefix, name) __SYMBOL_CONCAT__(prefix, name)
-#define __LOGGER_FUNC__(name) ____LOGGER_FUNC__(__LOGGER_PREFIX__, name)
+#define __MLOGGER_FUNC__(prefix, name) __SYMBOL_CONCAT__(prefix, name)
+#define MLOGGER_FUNC(name) __MLOGGER_FUNC__(MLOGGER_PREFIX, name)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-enum log_level {
-  LOG_ERROR,
-  LOG_WARNING,
-  LOG_INFO,
-  LOG_VERBOSE,
-  LOG_DEBUG,
+enum mlog_level {
+  MLOG_ERROR,
+  MLOG_WARN,
+  MLOG_INFO,
+  MLOG_VERB,
+  MLOG_DEBUG,
 };
-typedef uint8_t log_level_t;
+typedef uint8_t mlog_level_t;
 
-typedef void (*logger_f)(const char *msg);
+typedef void (*mlogger_f)(const char *msg);
 
-void __LOGGER_FUNC__(logger)(log_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
-void __LOGGER_FUNC__(set_logger)(log_level_t lvl, logger_f f);
+void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
+void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f);
 
-#define logfE(fmt, ...) __LOGGER_FUNC__(logger)(LOG_ERROR, fmt "\n", ##__VA_ARGS__)
-#define logfW(fmt, ...) __LOGGER_FUNC__(logger)(LOG_WARNING, fmt "\n", ##__VA_ARGS__)
-#define logfI(fmt, ...) __LOGGER_FUNC__(logger)(LOG_INFO, fmt "\n", ##__VA_ARGS__)
-#define logfV(fmt, ...) __LOGGER_FUNC__(logger)(LOG_VERBOSE, fmt "\n", ##__VA_ARGS__)
-#define logfD(fmt, ...) __LOGGER_FUNC__(logger)(LOG_DEBUG, fmt "\n", ##__VA_ARGS__)
+#define logfE(fmt, ...) MLOGGER_FUNC(logger)(MLOG_ERROR, fmt "\n", ##__VA_ARGS__)
+#define logfW(fmt, ...) MLOGGER_FUNC(logger)(MLOG_WARN, fmt "\n", ##__VA_ARGS__)
+#define logfI(fmt, ...) MLOGGER_FUNC(logger)(MLOG_INFO, fmt "\n", ##__VA_ARGS__)
+#define logfV(fmt, ...) MLOGGER_FUNC(logger)(MLOG_VERB, fmt "\n", ##__VA_ARGS__)
+#define logfD(fmt, ...) MLOGGER_FUNC(logger)(MLOG_DEBUG, fmt "\n", ##__VA_ARGS__)
 
 #ifdef __cplusplus
 }

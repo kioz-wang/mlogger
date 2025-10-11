@@ -35,18 +35,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef __LOGGER_FMT_MAX__
-#define __LOGGER_FMT_MAX__ (1024)
-#endif /* __LOGGER_FMT_MAX__ */
+#ifndef MLOGGER_FMT_MAX
+#define MLOGGER_FMT_MAX (1024)
+#endif /* MLOGGER_FMT_MAX */
 
-static log_level_t g_log_level = LOG_DEBUG;
+static mlog_level_t g_log_level = MLOG_DEBUG;
 
 static void default_logger(const char *msg) { fputs(msg, stdout); }
 
-static logger_f g_logger = default_logger;
+static mlogger_f g_logger = default_logger;
 
-static const char *log_level_names[LOG_DEBUG + 1] = {
-    "ERROR", "WARNING", "INFO", "VERBOSE", "DEBUG",
+static const char *log_level_names[MLOG_DEBUG + 1] = {
+    "ERROR", "WARN", "INFO", "VERB", "DEBUG",
 };
 
 static int32_t check_stderr_level() {
@@ -54,9 +54,9 @@ static int32_t check_stderr_level() {
   const char *value_s = NULL;
 
   if (value == -2) {
-#ifdef __LOGGER_ENV__
-    value_s = getenv(__LOGGER_ENV__);
-#endif /* __LOGGER_ENV__ */
+#ifdef MLOGGER_ENV
+    value_s = getenv(MLOGGER_ENV);
+#endif /* MLOGGER_ENV */
     if (!value_s || value_s[0] == '\0') {
       value = -1;
     }
@@ -64,7 +64,7 @@ static int32_t check_stderr_level() {
   if (value != -2)
     return value;
 
-  for (int32_t i = 0; i < LOG_DEBUG + 1; i++) {
+  for (int32_t i = 0; i < MLOG_DEBUG + 1; i++) {
     if (!strcmp(value_s, log_level_names[i])) {
       value = i;
       return value;
@@ -74,21 +74,21 @@ static int32_t check_stderr_level() {
   char *endptr = NULL;
   unsigned long parsed = strtoul(value_s, &endptr, 0);
   if (value_s == endptr || parsed == ULONG_MAX) {
-    value = LOG_DEBUG;
+    value = MLOG_DEBUG;
   } else {
-    value = (parsed > LOG_DEBUG) ? LOG_DEBUG : (int32_t)parsed;
+    value = (parsed > MLOG_DEBUG) ? MLOG_DEBUG : (int32_t)parsed;
   }
   return value;
 }
 
-static void logger(log_level_t lvl, const char *fmt, ...) {
+static void logger(mlog_level_t lvl, const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
 
   int32_t stderr_level = check_stderr_level();
 
   if ((stderr_level >= 0 && lvl <= stderr_level) || lvl <= g_log_level) {
-    char line[__LOGGER_FMT_MAX__] = {0};
+    char line[MLOGGER_FMT_MAX] = {0};
     (void)vsnprintf(line, sizeof(line) - 1, fmt, args);
 
     if (stderr_level >= 0 && lvl <= stderr_level)
@@ -100,20 +100,20 @@ static void logger(log_level_t lvl, const char *fmt, ...) {
   va_end(args);
 }
 
-static void set_logger(log_level_t lvl, logger_f f) {
-  g_log_level = (lvl > LOG_DEBUG) ? LOG_DEBUG : lvl;
+static void set_logger(mlog_level_t lvl, mlogger_f f) {
+  g_log_level = (lvl > MLOG_DEBUG) ? MLOG_DEBUG : lvl;
   if (f)
     g_logger = f;
 }
 
-void __LOGGER_FUNC__(logger)(log_level_t lvl, const char *fmt, ...) __attribute__((alias("logger")));
-void __LOGGER_FUNC__(set_logger)(log_level_t lvl, logger_f f) __attribute__((alias("set_logger")));
+void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((alias("logger")));
+void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f) __attribute__((alias("set_logger")));
 
 #ifdef __TEST_LOGGER__
 
 int32_t main(int32_t argc, const char *argv[]) {
-  set_logger(LOG_INFO, NULL);
-  for (int32_t i = 0; i < LOG_DEBUG + 1; i++) {
+  set_logger(MLOG_INFO, NULL);
+  for (int32_t i = 0; i < MLOG_DEBUG + 1; i++) {
     logger(i, "message level %s\n", log_level_names[i]);
   }
 }
