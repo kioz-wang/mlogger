@@ -2,7 +2,7 @@
  * @file logger.h
  * @author kioz.wang
  * @brief
- * @version 0.1
+ * @version 0.2
  * @date 2025-10-09
  *
  * @copyright MIT License
@@ -57,6 +57,7 @@ typedef void (*mlogger_f)(const char *msg);
 
 void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f);
+void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
 #define logfE(fmt, ...) MLOGGER_FUNC(logger)(MLOG_ERROR, fmt "\n", ##__VA_ARGS__)
 #define logfW(fmt, ...) MLOGGER_FUNC(logger)(MLOG_WARN, fmt "\n", ##__VA_ARGS__)

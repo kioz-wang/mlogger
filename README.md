@@ -72,6 +72,14 @@ void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f);
 
 修改全局变量。`lvl` 具有防呆设计；`f` 传入 `NULL` 时，不更新 `g_logger`。
 
+## `MLOGGER_FUNC(set_out_logger)`
+
+```c
+void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
+```
+
+将日志等级和输出函数传递到另一个模块。
+
 # Configuration
 
 ## `MLOGGER_PREFIX`

@@ -2,7 +2,7 @@
  * @file logger.c
  * @author kioz.wang
  * @brief
- * @version 0.1
+ * @version 0.2
  * @date 2025-10-09
  *
  * @copyright MIT License
@@ -106,8 +106,11 @@ static void set_logger(mlog_level_t lvl, mlogger_f f) {
     g_logger = f;
 }
 
+static void set_out_logger(void (*f)(mlog_level_t, mlogger_f)) { f(g_log_level, g_logger); }
+
 void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((alias("logger")));
 void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f) __attribute__((alias("set_logger")));
+void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f)) __attribute__((alias("set_out_logger")));
 
 #ifdef __TEST_LOGGER__
 
