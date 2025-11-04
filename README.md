@@ -84,7 +84,7 @@ void MLOGGER_FUNC(set_out_logger)(void (*f)(mlog_level_t, mlogger_f));
 
 ## `MLOGGER_PREFIX`
 
-为避免移植时出现符号冲突（像`logger`这种名字太常见了），可以配置该宏。
+为避免移植时出现符号冲突（像`logger`这种名字太常见了），请在头文件中修改宏定义。
 
 > 默认值为 `_`
 

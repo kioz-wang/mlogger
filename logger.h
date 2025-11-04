@@ -33,16 +33,21 @@
 
 #include <stdint.h>
 
-#ifndef MLOGGER_PREFIX
-#define MLOGGER_PREFIX _
-#endif
-#define __SYMBOL_CONCAT__(a, b) a##b
-#define __MLOGGER_FUNC__(prefix, name) __SYMBOL_CONCAT__(prefix, name)
-#define MLOGGER_FUNC(name) __MLOGGER_FUNC__(MLOGGER_PREFIX, name)
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#ifdef MLOGGER_PREFIX
+#undef MLOGGER_PREFIX
+#undef MLOGGER_FUNC
+#undef logfE
+#undef logfW
+#undef logfI
+#undef logfV
+#undef logfD
+#else
+#define __SYMBOL_CONCAT__(a, b) a##b
+#define __MLOGGER_FUNC__(prefix, name) __SYMBOL_CONCAT__(prefix, name)
 
 enum mlog_level {
   MLOG_ERROR,
@@ -54,6 +59,10 @@ enum mlog_level {
 typedef uint8_t mlog_level_t;
 
 typedef void (*mlogger_f)(const char *msg);
+#endif
+
+#define MLOGGER_PREFIX _
+#define MLOGGER_FUNC(name) __MLOGGER_FUNC__(MLOGGER_PREFIX, name)
 
 void MLOGGER_FUNC(logger)(mlog_level_t lvl, const char *fmt, ...) __attribute__((format(printf, 2, 3)));
 void MLOGGER_FUNC(set_logger)(mlog_level_t lvl, mlogger_f f);
