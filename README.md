@@ -9,7 +9,7 @@
 ## Test and Run
 
 ```shell
-$ rm -f *.gch *.o a.out && gcc -Wall -Wextra -D__TEST_LOGGER__ *.[ch]
+$ rm -f *.gch *.o a.out && gcc -Wall -Wextra -D__TEST_MAIN__ *.[ch]
 $ ./a.out 
 [E]hello world
 [W]hello world

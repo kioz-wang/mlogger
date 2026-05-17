@@ -160,7 +160,7 @@ void mlogf(mlogger_t *mlogger, mlog_level_t level, const char *fmt, ...) {
     }
 }
 
-#ifdef __TEST_LOGGER__
+#ifdef __TEST_MAIN__
 
 int32_t main(void) {
     mlogger_t mlogger;
@@ -173,4 +173,4 @@ int32_t main(void) {
     }
 }
 
-#endif /* __TEST_LOGGER__ */
+#endif /* __TEST_MAIN__ */
